@@ -18,10 +18,23 @@ def home():
 def about():
     return render_template("about.html")    
 
-
 @app.route('/get_carebears_collection')
 def get_carebears_collection():
     return render_template("carebears_collection.html", collections=mongo.db.carebears_collection.find())
+
+@app.route('/character_info')
+def character_info():
+    return render_template("carebear_info.html")  #Later, add a , and delete )
+    #category=mongo.db.carebears_collection.find_one({'_id': ObjectId(category_name)}))    
+
+@app.route('/sign_up')
+def signUp():
+    return render_template("sign_up.html")
+
+@app.route('/sign_in')
+def signIn():
+    return render_template("sign_in.html")
+
 
 if __name__ == '__main__':
     print(os.environ.get('IP'))

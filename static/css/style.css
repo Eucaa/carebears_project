@@ -3,8 +3,16 @@
 font-family: 'Quicksand', sans-serif;
 */
 
-html {
-    width: 100%;
+
+.page_cover {
+    min-height: 100vh;
+}
+
+.bg_cover {
+    background: url("../css/img/bg_1.jpg");
+    background-size: cover !important;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .navbar {
@@ -13,7 +21,7 @@ html {
 
 .container-fluid {
     width: 100%;
-    padding: 0;
+    padding: 0; /* there's something with the padding for mobile sizing at the carebear_info page*/
     margin: 0;
 }
 
@@ -26,14 +34,30 @@ html {
     font-family: 'Quicksand', sans-serif;
 }
 
-.bg_1 {
+/*.bg_1 { 
+    /* The image used */
+    
+
+    /* Center and scale the image nicely
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}*/
+
+/*.bg_1 {
     width: 100%;
     height: auto;
     bottom: 0px;
     top: 0px;
     left: 0;
-    position: fixed;
+    /*position: fixed;
     z-index: -1;
+} */
+
+.row_position {
+    margin: 0;
+    display: flex;
 }
 
 .search_field {
@@ -58,8 +82,45 @@ html {
 
 .general_about {
     position: absolute;
-    top: 3em;
     bottom: 3em;
     left: 20em;
     right: 20em;
+}
+
+.signUp_position {
+    position: absolute;
+    padding: 10em 10em;
+}    
+
+.adjust_fluid {
+    width: 100%;
+}
+
+.ajust_row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.heart_logo {
+    width: 7em;
+    height: 6em;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.title_intro {
+    margin-top: 15px;
+}
+
+.starbuddy_logo {
+    width: 5em;
+    height: 6em;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.character_sizing {
+    width: inherit;
+    height: inherit;
+    padding: 2rem;
 }
