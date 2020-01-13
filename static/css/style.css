@@ -3,6 +3,9 @@
 font-family: 'Quicksand', sans-serif;
 */
 
+body {
+    background-color: #e0efff;
+}
 
 .page_cover {
     min-height: 100vh;
@@ -123,4 +126,15 @@ font-family: 'Quicksand', sans-serif;
     width: inherit;
     height: inherit;
     padding: 2rem;
+}
+
+.wishBear_size {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%; 
+}
+
+.calendar_size {
+    font-size: xx-large;
 }

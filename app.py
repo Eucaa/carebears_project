@@ -35,6 +35,19 @@ def signUp():
 def signIn():
     return render_template("sign_in.html")
 
+@app.route('/character_creation')
+def addBear():
+    return render_template("add_bear.html")
+
+"""
+@app.route('/insert_character', methods=['POST'])
+def insert_task():
+    characters = mongo.db.carebears_collection  # Get the tasks collection from Mongo.
+    characters.insert_one(request.form.to_dict()) 
+    return redirect(url_for('get_carebears_collection'))
+
+round line 11 in add_bear view: <!--<form action="{{ url_for('insert_character') }}" method="POST"  class="col s12">-->
+ """   
 
 if __name__ == '__main__':
     print(os.environ.get('IP'))

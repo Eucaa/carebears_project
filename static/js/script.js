@@ -21,6 +21,8 @@ $( '.dropdown-menu a' ).on( 'click', function( event ) {
    return false;
 });
 
-
+$('#yearpicker').datepicker(){
+    defaultViewDate: {year: '1982'}
+});
 
 

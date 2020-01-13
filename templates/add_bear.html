@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3 class="text-center">Character Creation</h3>
+<div class="container-fluid">
+    <div class="row row_position no-gutters mx-auto col-md-3">
+        <img class="img-fluid wishBear_size" src="static/css/img/wishBear.png" alt="page image">
+    </div>
+</div>
+<div class="container">
+    
+        <div class="form-row text-center">
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputCharacterName">Character Name</label>
+                <input type="text" class="form-control text-center" id="inputCharacterName" placeholder="Name of Character">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputNameCreator">Name Content Creator</label>
+                <input type="email" class="form-control" id="inputNameCreator" placeholder="Enter your (nick)name">
+            </div>
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputGender">Gender</label>
+                <select id="inputGender" class="form-control">
+                    <option selected>Choose Option...</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Unknown</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputCategory">Character Category</label>
+                <select id="inputCategory" class="form-control">
+                    <option selected>Choose Option...</option>
+                    <option>Care Bear</option>
+                    <option>Care Bear Cousin</option>
+                    <option>Villain</option>
+                    <option>Compagnion</option>
+                </select>
+            </div>
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputResidence">Residence(nationality)</label>
+                <select id="inputResidence" class="form-control">
+                    <option selected>Choose Option...</option>
+                    <option>Care-a-Lot</option>
+                    <option>Adventure Beach</option>
+                    <option>Forest of Feelings</option>
+                    <option>Earth</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputColor">Main Color</label>
+                <input type="email" class="form-control" id="inputColor" placeholder="Main color of character (fur/clothes etc.)">
+            </div>
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputRelease">Release Date</label>
+                    <div class="input-group date" id="yearpicker">
+                        <input type='text' class="form-control" placeholder="Original release date">
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar calendar_size" aria-hidden="true"></i>
+                        </span>
+                    </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputBellyBadge">Belly Badge description</label>
+                <input type="email" class="form-control" id="inputBellyBadge" placeholder="e.g. Heart Star Crown">
+            </div>
+            <div class="form-group mx-auto col-md-4">
+                <label for="inputVoice">Voice Actor/ Actress</label>
+                <input type="password" class="form-control" id="inputVoice" placeholder="Name of original voice actor">
+            </div>
+        </div>
+        
+        <div class="form-group text-center">
+                <label for="exampleFormControlTextarea1">Character Story</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="You can write a small story about the character in here..."></textarea>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    I hereby confirm that the information as given is correct.
+                </label>
+            </div>
+        </div>
+        <div class="form-row text-center">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
