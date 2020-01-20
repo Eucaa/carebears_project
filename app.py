@@ -6,48 +6,87 @@ from bson.objectid import ObjectId
 app = Flask(__name__)
 
 app.config["MONGO_DBNAME"] = 'carebears_db'
-app.config["MONGO_URI"] = os.environ.get('MONGODB_CONNECTIONSTRING', 'mongodb://localhost') +  "/" + app.config["MONGO_DBNAME"] + "?retryWrites=true&w=majority"
+app.config["MONGO_URI"] = os.environ.get('MONGODB_CONNECTIONSTRING', 'mongodb://localhost') + "/" + app.config["MONGO_DBNAME"] + "?retryWrites=true&w=majority"
 
 mongo = PyMongo(app)
+
 
 @app.route('/')
 def home():
     return render_template("home.html")
 
+
 @app.route('/about')
 def about():
-    return render_template("about.html")    
+    return render_template("about.html")
+
 
 @app.route('/get_carebears_collection')
 def get_carebears_collection():
     return render_template("carebears_collection.html", collections=mongo.db.carebears_collection.find())
 
-@app.route('/character_info')
-def character_info():
-    return render_template("carebear_info.html")  #Later, add a , and delete )
-    #category=mongo.db.carebears_collection.find_one({'_id': ObjectId(category_name)}))    
 
 @app.route('/sign_up')
 def signUp():
     return render_template("sign_up.html")
 
+
 @app.route('/sign_in')
 def signIn():
     return render_template("sign_in.html")
 
+
 @app.route('/character_creation')
 def addBear():
-    return render_template("add_bear.html")
+    print("Updated")
+    return render_template("add_bear.html", characters=mongo.db.carebears_collection.find())
 
-"""
+
+@app.route('/character_info')
+def character_info():
+    return render_template("carebear_info.html")  #Later, add a , and delete )
+    category = mongo.db.carebears_collection.find_one({'_id': ObjectId(carebears_collection_id)})
+
+
+@app.route('/edit_character/<carebears_collection_id>')
+def edit_character(carebears_collection_id):
+    the_character = mongo.db.carebears_collection.find_one({"_id": ObjectId(carebears_collection_id)})
+    all_categories = mongo.db.categories.find()
+    return render_template("edit_character.html", carebears=the_character, categories=all_categories)
+
+
+@app.route('/update_character/<carebears_collection_id>', methods=['POST'])
+def update_character(carebears_collection_id):
+    characters = mongo.db.character_collection
+    characters.update({'_id': ObjectId(carebears_collection_id)},
+    {
+        'character_name': request.form.get('character_name'),
+        'category_name': request.form.get('catergory_name'),
+        'color': request.form.get('color'),
+        'belly_badge': request.form.get('belly_badge'),
+        'gender': request.form.get('gender'),
+        'residence': request.form.get('residence'),
+        'release_date': request.form.get('release_date'),
+        'voice_actor': request.form.get('voice_actor')
+    })
+    return redirect(url_for('get_carebears_collection'))
+
+
 @app.route('/insert_character', methods=['POST'])
-def insert_task():
+def insert_character():
     characters = mongo.db.carebears_collection  # Get the tasks collection from Mongo.
     characters.insert_one(request.form.to_dict()) 
     return redirect(url_for('get_carebears_collection'))
 
+
+@app.route('/delete_character/<carebears_collection_id>')
+def delete_character(carebears_collection_id):
+    mongo.db.carebears_collection_id.remove({'_id': ObjectId(carebears_collection_id)})
+    return redirect(url_for('get_carebears_collection'))
+
+"""
 round line 11 in add_bear view: <!--<form action="{{ url_for('insert_character') }}" method="POST"  class="col s12">-->
- """   
+"""  
 
 if __name__ == '__main__':
     print(os.environ.get('IP'))
