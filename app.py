@@ -21,9 +21,24 @@ def about():
     return render_template("about.html")
 
 
+@app.route('/character_list')
+def character_list():
+    listOfCharacterFromDb = list(mongo.db.carebears_collection.find())
+    count = 0
+    for character in listOfCharacterFromDb:
+        category_name = mongo.db.categories.find_one( { "_id": character['category_id'] } )['category_name']
+        voice_actor_name = mongo.db.voice_actor.find_one( { "_id": character['voice_actor_id'] } )['voice_actor']
+
+        listOfCharacterFromDb[count]['category_name'] = category_name
+        listOfCharacterFromDb[count]['voice_actor_name'] = voice_actor_name
+        count = count + 1
+
+    return render_template("character_list.html", characters = listOfCharacterFromDb)
+
+
 @app.route('/get_carebears_collection')
-def get_carebears_collection():
-    return render_template("carebears_collection.html", collections=mongo.db.carebears_collection.find())
+def carebears_collection():
+    return render_template("carebears_collection.html")
 
 
 @app.route('/sign_up')
@@ -39,7 +54,7 @@ def signIn():
 @app.route('/character_creation')
 def addBear():
     print("Updated")
-    return render_template("add_bear.html", characters=mongo.db.carebears_collection.find())
+    return render_template("add_bear.html", characters=mongo.db.carebears_collection.find(), categories=mongo.db.categories.find())
 
 
 @app.route('/character_info')
@@ -50,7 +65,7 @@ def character_info():
 
 @app.route('/edit_character/<carebears_collection_id>')
 def edit_character(carebears_collection_id):
-    the_character = mongo.db.carebears_collection.find_one({"_id": ObjectId(carebears_collection_id)})
+    the_character = mongo.db.carebears_collection.find_one({'_id': ObjectId(carebears_collection_id)})
     all_categories = mongo.db.categories.find()
     return render_template("edit_character.html", carebears=the_character, categories=all_categories)
 
@@ -75,7 +90,7 @@ def update_character(carebears_collection_id):
 @app.route('/insert_character', methods=['POST'])
 def insert_character():
     characters = mongo.db.carebears_collection  # Get the tasks collection from Mongo.
-    characters.insert_one(request.form.to_dict()) 
+    characters.insert_one(request.form.to_dict())
     return redirect(url_for('get_carebears_collection'))
 
 
