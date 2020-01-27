@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3 class="text-center">Character Creation</h3>
+<h3 class="text-center">Edit Character</h3>
 <div class="container-fluid">
     <div class="row row_position no-gutters mx-auto col-md-3">
         <img class="img-fluid wishBear_size" src="static/css/img/wishBear.png" alt="page image">
@@ -12,7 +12,7 @@
         <div class="form-row text-center">
             <div class="form-group mx-auto col-md-4">
                 <label for="character_name">Character Name</label>
-                <input type="text" class="form-control text-center" id="character_name" name="character_name" placeholder="Name of Character">
+                <input type="text" class="form-control text-center" id="character_name" name="character_name" placeholder="Name of Character" value="{{carebears.character_name}}" />
             </div>
         </div>
         <div class="form-row">
@@ -23,10 +23,27 @@
             <div class="form-group mx-auto col-md-4">
                 <label for="gender">Gender</label>
                 <select id="gender" class="form-control" name="gender">
-                    <option selected>Choose Option...</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Unknown</option>
+                    {% if carebears.gender == None %}                    
+                        <option value="" selected>Choose Option...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Unknown">Unknown</option>
+                    {% elif carebears.gender == "Male" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Unknown">Unknown</option>
+                    {% elif carebears.gender == "Female" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female" selected>Female</option>
+                        <option value="Unknown">Unknown</option>
+                    {% elif carebears.gender == "Unknown" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Unknown" selected>Unknown</option>
+                    {% endif %}
                 </select>
             </div>
         </div>
@@ -34,47 +51,78 @@
             <div class="form-group mx-auto col-md-4">
                 <label for="category_name">Character Category</label>
                 <select id="category" class="form-control" name="category_name">
-                    <option selected>Choose Option...</option>
+                    {% if carebears.category_id == None %}
+                        <option value="" selected>Choose Option...</option>
+                    {% else %}
+                        <option value="">Choose Option...</option>
+                    {% endif %}
                     {% for cat in categories %}
-                        <option value="{{cat.category_name}}">{{cat.category_name}}</option>
+                        {% if cat._id == carebears.category_id %}
+                        <option value="{{cat._id}}" selected>{{cat.category_name}}</option>
+                        {% else %}
+                        <option value="{{cat._id}}">{{cat.category_name}}</option>
+                        {% endif %}
                     {% endfor %}
-                    <option>Care Bear</option>
-                    <option>Care Bear Cousin</option>
-                    <option>Villain</option>
-                    <option>Companion</option>
+                    
                 </select>
             </div>
             <div class="form-group mx-auto col-md-4">
                 <label for="residence">Residence(nationality)</label>
                 <select id="residence" class="form-control" name="residence">
-                    <option selected>Choose Option...</option>
-                    <option>Care-a-Lot</option>
-                    <option>Adventure Beach</option>
-                    <option>Forest of Feelings</option>
-                    <option>Earth</option>
+                    {% if carebears.residence == None %}
+                        <option value="" selected>Choose Option...</option>
+                        <option value="Care-a-Lot">Care-a-Lot</option>
+                        <option value="Adventure Beach">Adventure Beach</option>
+                        <option value="Forest of Feelings">Forest of Feelings</option>
+                        <option value="Earth">Earth</option>
+                    {% elif carebears.residence == "Care-a-Lot" %}    
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Care-a-Lot" selected>Care-a-Lot</option>
+                        <option value="Adventure Beach">Adventure Beach</option>
+                        <option value="Forest of Feelings">Forest of Feelings</option>
+                        <option value="Earth">Earth</option>
+                    {% elif carebears.residence == "Adventure Beach" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Care-a-Lot">Care-a-Lot</option>
+                        <option value="Adventure Beach" selected>Adventure Beach</option>
+                        <option value="Forest of Feelings">Forest of Feelings</option>
+                        <option value="Earth">Earth</option>
+                    {% elif carebears.residence == "Forest of Feelings" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Care-a-Lot">Care-a-Lot</option>
+                        <option value="Adventure Beach">Adventure Beach</option>
+                        <option value="Forest of Feelings" selected>Forest of Feelings</option>
+                        <option value="Earth">Earth</option>
+                    {% elif carebears.residence == "Earth" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Care-a-Lot">Care-a-Lot</option>
+                        <option value="Adventure Beach">Adventure Beach</option>
+                        <option value="Forest of Feelings">Forest of Feelings</option>
+                        <option value="Earth" selected>Earth</option>
+                    {% endif %}
                 </select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group mx-auto col-md-4">
                 <label for="color">Main Color</label>
-                <input type="email" class="form-control" id="color" name="color" placeholder="Main color of character (fur/clothes etc.)">
+                <input type="email" class="form-control" id="color" name="color" placeholder="Main color of character (fur/clothes etc.)" value="{{carebears.color}}">
             </div>
             <div class="form-group mx-auto col-md-4">
                 <label for="release_date">Release Date (YYYY/MM/DD)</label>
                     <div class="input-group date">
-                        <input class="form-control" id="datepicker" name="release_date" placeholder="Original release date">
+                        <input class="form-control" id="datepicker" name="release_date" placeholder="Original release date" value="{{carebears.release_date}}">
                     </div>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group mx-auto col-md-4">
                 <label for="belly_badge">Belly Badge description</label>
-                <input type="email" class="form-control" id="belly_badge" name="belly_badge" placeholder="e.g. Heart Star Crown">
+                <input type="email" class="form-control" id="belly_badge" name="belly_badge" placeholder="e.g. Heart Star Crown" value="{{carebears.belly_badge}}"> 
             </div>
             <div class="form-group mx-auto col-md-4">
                 <label for="voice_actor">Voice Actor/ Actress</label>
-                <input type="password" class="form-control" id="voice_actor" name="voice_actor" placeholder="Name of original voice actor">
+                <input type="text" class="form-control" id="voice_actor" name="voice_actor_name" placeholder="Name of original voice actor" value="{{carebears.voice_actor}}">
             </div>
         </div>
         
@@ -90,7 +138,7 @@
         </div>
         <div class="form-row text-center">
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Edit Character</button>
+                <a href="{{url_for('character_list')}}" class="btn btn-primary" type="submit">Edit Character</a>
             </div>
         </div>
     </form>
