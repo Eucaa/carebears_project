@@ -72,25 +72,26 @@ def character_info(character_id):
 
     return render_template("carebear_info.html", character=characterFromDb)
 
-
-@app.route('/bla', methods=['POST'])
-def bla():
-    print(upload_image(request.files))
-    return None
-
-
 def upload_image(files):
     if files is None:
         return None
 
-    blob = files['image'].read()
-    size = len(blob)
-    
-    if not allowed_image_filesize(size):
+    # create handle for the image.
+    image = files['image']
+
+    # seek till end of file
+    image.seek(0, os.SEEK_END)
+
+    # determine file length in bytes 
+    file_length = image.tell()
+
+    # reset stream position back to 0 so we can later process the complete file.
+    image.seek(0)
+
+    if not allowed_image_filesize(file_length):
         print("Filesize exceeded maximum limit")
         return None
         
-    image = files['image']
     if image.filename == "":
         print("No filename")
         return None
@@ -101,12 +102,13 @@ def upload_image(files):
 
     fileName = secure_filename(image.filename)
     directory = os.path.join(os.getcwd(), app.config["IMAGE_UPLOAD"])
-    filePath = os.path.join(directory, fileName)
 
     # check if upload directory exists else create it
     if not os.path.exists(directory):
         os.makedirs(directory)
-    image.save(os.path.join(directory, fileName))
+    
+    filePath = os.path.join(directory, fileName)    
+    image.save(filePath)
     return filePath
 
 
@@ -131,13 +133,6 @@ def allowed_image_filesize(filesize):
         return True
     else:
         return False
-
-
-@app.route('/uploads/<character_id>')
-def uploaded_file(character_id):
-    the_character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
-    all_categories = mongo.db.categories.find()
-    return redirect(url_for('upload_image'))
 
 
 @app.route('/edit_character/<character_id>')
