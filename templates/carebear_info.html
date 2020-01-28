@@ -4,14 +4,14 @@
 <div class="container">    
   <div class="row justify-content-between title_intro ajust_row no-gutters">
     <div class="col-sm-1 text-center">
-      <img src="static/css/img/heart_logo.png" class="rounded heart_logo" alt="carebears logo">
+      <img src="{{url_for('static' , filename='css/img/heart_logo.png')}}" class="rounded heart_logo" alt="carebears logo">
     </div>
     <div class="col-sm-9 text-center"> 
       <h1>Character Information</h1>
-      <h3>Name Character</h3>
+      <h3>{{character.character_name}}</h3>
     </div>
     <div class="col-sm-1 text-center">
-      <img src="static/css/img/starbuddies.png" class="rounded starbuddy_logo" alt="carebears image">
+      <img src="{{url_for('static' , filename='css/img/starbuddies.png')}}" class="rounded starbuddy_logo" alt="carebears image">
     </div>
   </div>
 </div>
@@ -19,9 +19,10 @@
     
     <div class="row justify-content-between">    
         <div class="col-sm-6 text-center">
-            <img class="character_sizing" src="static/css/img/funshine.jpg" class="rounded heart_logo" alt="carebears image" />            
+            <img class="character_sizing" href="{{character.image_path}}" alt="carebears image" />            
         </div>
         <div class="col-sm-6 table-responsive-sm">
+        
             <table class="table table-sm table-borderless text-left">
                 <thead>
                     <tr>
@@ -35,49 +36,49 @@
                     <tr>
                         <td></td>                         
                         <td scope="row">Character Name</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.character_name}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Category</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.category_name}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Main Color</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.color}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Belly Badge</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.belly_badge}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Original Gender</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.gender}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Residence</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.residence}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Release Date</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.release_date}}</td>
                         <td></td>                         
                     </tr>
                     <tr>
                         <td></td>                         
                         <td scope="row">Voice Actor</th>
-                        <td class="info_text_align">Blep</td>
+                        <td class="info_text_align">{{character.voice_actor_name}}</td>
                         <td></td>                         
                     </tr>
                 </tbody>
@@ -86,10 +87,10 @@
     </div>
     <div class="row content">
         <div class="col-sm-6 text-center half-width">
-            <button type="button" class="btn btn-warning">Edit Character</button>
+            <a href="{{url_for('edit_character', character_id=character._id)}}" class="btn btn-warning">Edit Character</a>
         </div>   
         <div class="col-sm-4 text-center half-width">
-            <button type="button" class="btn btn-warning">Delete Character</button>
+            <a href="{{url_for('delete_character', character_id=character._id)}}" class="btn btn-warning">Delete Character</a>
         </div>
         <div class="col-sm-2 text-center half-width">
         </div>   
@@ -97,7 +98,7 @@
     <div class="row justify-content-center">
         
         <div class="col-sm-8 text-left info_position story_info_padding"> 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            <p>{{character.story}}
             </p>
         </div>
         

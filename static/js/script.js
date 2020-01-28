@@ -1,4 +1,4 @@
-/*
+
 var options = [];
 
 $( '.dropdown-menu a' ).on( 'click', function( event ) {
@@ -21,8 +21,13 @@ $( '.dropdown-menu a' ).on( 'click', function( event ) {
    console.log( options );
    return false;
 });
-*/
+
+
 $('#datepicker').datepicker({
     uiLibrary: 'bootstrap4',
     format: 'yyyy/mm/dd'
 });
+
+function filesize(elem){
+    document.cookie = `filesize=${elem.files[0].size}`
+};

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="container-fluid no-gutters max-height">
+    <div class="row row_position">
+        <img class="img-fluid signUp_image_position" src="{{url_for('static', filename='css/img/register2.jpg')}}" alt="page image">
+        <div class="container-fluid signUp_position">    
+            <div class="row justify-content-center">
+                <div class="col-12 inner_div">
+                   <table class="table table-striped">
+                        <thead>
+                            <tr>
+                            <th scope="col">Character Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Main Color</th>
+                            <th scope="col">Belly Badge</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Residence</th>
+                            <th scope="col">Release Date</th>
+                            <th scope="col">Voice Actor</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for character in characters %}
+                            <tr>
+                            <td>{{character.character_name}}</td>
+                            <td>{{character.category_name}}</td>
+                            <td>{{character.color}}</td>
+                            <td>{{character.belly_badge}}</td>
+                            <td>{{character.gender}}</td>
+                            <td>{{character.residence}}</td>
+                            <td>{{character.release_date}}</td>
+                            <td>{{character.voice_actor_name}}</td>
+                            <td><a href="{{url_for('character_info', character_id=character._id)}}">Details</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

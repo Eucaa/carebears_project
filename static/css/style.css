@@ -105,7 +105,13 @@ body {
     z-index: -1;
 } */
 
-/*--- carebear_info view ---*/
+/*--- about view ---*/
+
+.about_sizing {
+    padding: 0;
+    height: 100%;
+}
+
 
 .row_position {
     margin: 0;
@@ -160,7 +166,7 @@ body {
 .inner_div{
     margin: auto;
     text-align: center;
-    background-color: rgba(254, 255, 242, 0.85);
+    background-color: rgba(254, 255, 242, 0.95);
     border-radius: 2%;
     padding: 20px;
 }
@@ -198,6 +204,7 @@ body {
 }    
 
 /*--- carebear_info view ---*/
+
 .adjust_fluid {
     width: 100%;
     height: auto;
@@ -248,7 +255,8 @@ body {
     padding: 2rem;
 }
 
-/*--- character_creation view ---*/
+/*--- add_bear view ---*/
+
 .wishBear_size {
     display: block;
     margin-left: auto;
@@ -263,6 +271,17 @@ body {
 
 .navbar_container {
     height: 55px;
+}
+
+.homesearch_btn_size_adjust {
+    width: inherit;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+}
+
+.reposition_addImage_btn {
+    padding: 3px;
 }
 
 /*--- get_carebears_collection view ---*/
@@ -348,14 +367,34 @@ body {
     }
 
     .base_logo_resize {
-    width: 55%;
-}
+        width: 55%;
+    }
 
+    .justify_mobile_size {
+        justify-content: space-evenly!important;
+
+    }
+
+    .btn-noShow {
+        display: none;
+    }
+
+    .padding_mobile_resize {
+        padding-right: 5px;
+        padding-left: 10px;
+    }
 }
 
 @media screen and (min-width: 1280px) {
     .signUp_image_position {
         height: 100vh;
         width: 100vw;
+    }
+
+}
+
+@media screen and (min-width: 767px) {
+    .select-btn-resize {
+        width: 8rem;
     }
 }
