@@ -101,7 +101,7 @@ def upload_image(files):
         return None
 
     fileName = secure_filename(image.filename)
-    directory = os.path.join(os.getcwd(), app.config["IMAGE_UPLOAD"])
+    directory = os.path.join(os.getcwd(), app.config["IMAGE_UPLOAD"][1:])
 
     # check if upload directory exists else create it
     if not os.path.exists(directory):
