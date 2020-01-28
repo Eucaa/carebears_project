@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config['IMAGE_UPLOAD'] = 'static/upload'
+app.config['IMAGE_UPLOAD'] = '/static/upload'
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG"]
 app.config['MAX_IMAGE_SIZE'] = 3 * 1024 * 1024  # max mb = 3mb
 
@@ -109,7 +109,7 @@ def upload_image(files):
     
     filePath = os.path.join(directory, fileName)    
     image.save(filePath)
-    return filePath
+    return os.path.join(app.config["IMAGE_UPLOAD"], fileName) 
 
 
 def allowed_image(filename):
