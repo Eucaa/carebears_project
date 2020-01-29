@@ -7,8 +7,9 @@
         <img class="img-fluid signUp_image_position" src="{{url_for('static', filename='css/img/register2.jpg')}}" alt="page image">
         <div class="container-fluid signUp_position">    
             <div class="row justify-content-center">
-                <div class="col-12 inner_div">
-                   <table class="table table-striped">
+                <div class="col-12 inner_div overflow_sizing">
+                <p class="sort-btn-align"><button class="btn btn-secondary homesearch_btn_size" onclick="sortTable()">Sort by character</button></p>
+                   <table class="table table-striped" id="myTable">
                         <thead>
                             <tr>
                             <th scope="col">Character Name</th>
@@ -40,7 +41,6 @@
                     </table>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
