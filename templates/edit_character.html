@@ -77,30 +77,56 @@
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
                         <option value="Earth">Earth</option>
+                        <option value="Cold Heart Castle">Cold Heart Castle</option>
+                        <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Care-a-Lot" %}    
                         <option value="" disabled>Choose Option...</option>
                         <option value="Care-a-Lot" selected>Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
                         <option value="Earth">Earth</option>
+                        <option value="Cold Heart Castle">Cold Heart Castle</option>
+                        <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Adventure Beach" %}
                         <option value="" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach" selected>Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
                         <option value="Earth">Earth</option>
+                        <option value="Cold Heart Castle">Cold Heart Castle</option>
+                        <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Forest of Feelings" %}
                         <option value="" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings" selected>Forest of Feelings</option>
                         <option value="Earth">Earth</option>
+                        <option value="Cold Heart Castle">Cold Heart Castle</option>
+                        <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Earth" %}
                         <option value="" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
                         <option value="Earth" selected>Earth</option>
+                        <option value="Cold Heart Castle">Cold Heart Castle</option>
+                        <option value="Unknown">Unknown</option>
+                    {% elif carebears.residence == "Cold Heart Castle" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Care-a-Lot">Care-a-Lot</option>
+                        <option value="Adventure Beach">Adventure Beach</option>
+                        <option value="Forest of Feelings">Forest of Feelings</option>
+                        <option value="Earth">Earth</option>
+                        <option value="Cold Heart Castle" selected>Cold Heart Castle</option>
+                        <option value="Unknown">Unknown</option>    
+                    {% elif carebears.residence == "Unknown" %}
+                        <option value="" disabled>Choose Option...</option>
+                        <option value="Care-a-Lot">Care-a-Lot</option>
+                        <option value="Adventure Beach">Adventure Beach</option>
+                        <option value="Forest of Feelings">Forest of Feelings</option>
+                        <option value="Earth">Earth</option>
+                        <option value="Cold Heart Castle">Cold Heart Castle</option>
+                        <option value="Unknown" selected>Unknown</option>
                     {% endif %}
                 </select>
             </div>
@@ -131,12 +157,6 @@
         <div class="form-group text-center">
                 <label for="story">Character Story</label>
                 <textarea class="form-control" id="story" name="story" rows="4" placeholder="You can write a small story about the character in here...">{{carebears.story}}</textarea>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck">
-                <label class="form-check-label" for="gridCheck">
-                    I hereby confirm that the information as given is correct.
-                </label>
-            </div>
         </div>
         <div class="form-row text-center">
             <div class="col-12">
