@@ -84,26 +84,15 @@ body {
     height: 100%;
 }
 
-/*.bg_1 { 
-    /* The image used */
-    
+.inner_div{
+    margin: auto;
+    text-align: center;
+    background-color: rgba(254, 255, 242, 0.95);
+    border-radius: 2%;
+    padding: 20px;
+}
 
-    /* Center and scale the image nicely
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    
-}*/
-
-/*.bg_1 {
-    width: 100%;
-    height: auto;
-    bottom: 0px;
-    top: 0px;
-    left: 0;
-    /*position: fixed;
-    z-index: -1;
-} */
+/*--- Unique classes ---*/
 
 /*--- about view ---*/
 
@@ -163,13 +152,6 @@ body {
     height: 100%;
     display: flex;
 }
-.inner_div{
-    margin: auto;
-    text-align: center;
-    background-color: rgba(254, 255, 242, 0.95);
-    border-radius: 2%;
-    padding: 20px;
-}
 
 .about_title-position {
     padding-bottom: 1rem;
@@ -201,7 +183,18 @@ body {
 .signUp_position {
     position: absolute;
     padding: 10em 10em;
-}    
+}   
+
+/*--- character list view ---*/
+
+.overflow_sizing {
+    height: 500px;
+    overflow-y: auto;
+}
+
+.sort-btn-align {
+    text-align: left;
+}
 
 /*--- carebear_info view ---*/
 
@@ -316,7 +309,7 @@ body {
     background-color: #91ccce;
 }
 
-@media screen and  (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
     body {
         background-color: #e0efff;
         height: 100%;
@@ -353,6 +346,22 @@ body {
 
     .no_flexwrap_collection {
         flex-wrap: inherit;
+    }
+
+    .col_info_size1 {
+        width: 10%!important;
+    }
+
+    .col_info_size2 {
+        width: 40%!important;
+    }
+
+    .col_info_size3 {
+        width: 40%!important;
+    }
+
+    .col_info_size4 {
+        width: 10%!important;
     }
 }
 

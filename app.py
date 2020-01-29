@@ -73,10 +73,11 @@ def character_info(character_id):
 
     return render_template("carebear_info.html", character=characterFromDb)
 
+
 def upload_image(files):
     if files is None:
         return None
-    
+
     if len(files) == 0:
         return None
 
@@ -86,7 +87,7 @@ def upload_image(files):
     # seek till end of file
     image.seek(0, os.SEEK_END)
 
-    # determine file length in bytes 
+    # determine file length in bytes
     file_length = image.tell()
 
     # reset stream position back to 0 so we can later process the complete file.
@@ -95,7 +96,7 @@ def upload_image(files):
     if not allowed_image_filesize(file_length):
         print("Filesize exceeded maximum limit")
         return None
-        
+
     if image.filename == "":
         print("No filename")
         return None
@@ -110,7 +111,7 @@ def upload_image(files):
     # check if upload directory exists else create it
     if not os.path.exists(directory):
         os.makedirs(directory)
-    
+
     filePath = os.path.join(directory, fileName)    
     image.save(filePath)
     return os.path.join(app.config["IMAGE_UPLOAD"], fileName) 
@@ -139,7 +140,7 @@ def allowed_image_filesize(filesize):
         return False
 
 
-@app.route('/hello-search')
+@app.route('/character-search')
 def search():
     search = request.args.get('search')
     results = list(mongo.db.carebears_collection.aggregate([
@@ -239,6 +240,7 @@ def update_character(character_id):
     return redirect(url_for('character_info', character_id=character['_id']))
     #end add
 
+
 @app.route('/insert_character', methods=['POST'])
 def insert_character():
     formValues = request.form.to_dict()
@@ -261,13 +263,13 @@ def insert_character():
     formValues.pop('image', None)
 
     mongo.db.carebears_collection.insert_one(formValues)
-    return redirect(url_for('carebears_collection'))
+    return redirect(url_for('character_list'))
 
 
 @app.route('/delete_character/<character_id>')
 def delete_character(character_id):
     mongo.db.carebears_collection.remove({'_id': ObjectId(character_id)})
-    return redirect(url_for('carebears_collection'))
+    return redirect(url_for('character_list'))
 
 
 if __name__ == '__main__':
