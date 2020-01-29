@@ -8,9 +8,11 @@
                 <div class="row">
                     <img src="static/css/img/care-bears-base.png" class="img-fluid base_logo_resize" alt="carebears image">
                 </div>
-            <input type="text" class="search_input" placeholder="Search... (e.g. yellow, moon, companion or a name)" name="search"/></br>
-                <button type="button" class="btn btn-secondary homesearch_btn_size">Search</button>
-                <a href="{{url_for('carebears_collection')}}" class="btn btn-secondary homesearch_btn_size">Advanced Search</a>
+                <form action="hello-search" method="GET">
+                    <input type="text" class="search_input" placeholder="Search... (e.g. yellow, moon, companion or a name)" name="search"/></br>
+                    <button type="submit" class="btn btn-secondary homesearch_btn_size">Search</button>
+                    <a href="{{url_for('carebears_collection')}}" class="btn btn-secondary homesearch_btn_size" style="display:none;">Advanced Search</a>
+                </form>
             </div>
         </div>
     </div> 

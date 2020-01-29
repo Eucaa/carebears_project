@@ -64,6 +64,7 @@ def addBear():
 @app.route('/carebear_info/<character_id>')
 def character_info(character_id):
     characterFromDb = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
+    print(characterFromDb)
     category_name = mongo.db.categories.find_one( { "_id": characterFromDb['category_id'] } )['category_name']
     voice_actor_name = mongo.db.voice_actor.find_one( { "_id": characterFromDb['voice_actor_id'] } )['voice_actor']
 
@@ -74,6 +75,9 @@ def character_info(character_id):
 
 def upload_image(files):
     if files is None:
+        return None
+    
+    if len(files) == 0:
         return None
 
     # create handle for the image.
@@ -135,16 +139,79 @@ def allowed_image_filesize(filesize):
         return False
 
 
+@app.route('/hello-search')
+def search():
+    search = request.args.get('search')
+    results = list(mongo.db.carebears_collection.aggregate([
+        {
+            "$match": {
+                "$text": {
+                    "$search": search
+                }
+            }
+        },
+        {
+            "$lookup": {
+                "from": "categories",
+                "localField": "category_id",
+                "foreignField": "_id",
+                "as": "categories"
+            }
+        },
+        {
+            "$unwind": "$categories"
+        },
+        {
+            "$lookup": {
+                "from": "voice_actor",
+                "localField": "voice_actor_id",
+                "foreignField": "_id",
+                "as": "voiceactors"
+            }
+        },
+        {
+            "$unwind": "$voiceactors"
+        },
+        {
+            "$project": {
+                "_id": 1,
+                "character_name": 1,
+                "color": 1,
+                "belly_badge": 1,
+                "gender": 1,
+                "residence": 1,
+                "release_date": 1,
+                "story": 1,
+                "category_name": "$categories.category_name",
+                "voice_actor_name": "$voiceactors.voice_actor"
+            }
+        }
+    ]))
+
+    return render_template("character_list.html", characters=results)
+
 @app.route('/edit_character/<character_id>')
 def edit_character(character_id):
     the_character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
     all_categories = mongo.db.categories.find()
-    return render_template("edit_character.html", carebears=the_character, categories=all_categories)
+    the_voice_actor = mongo.db.voice_actor.find_one({'_id': the_character['voice_actor_id']})
+    return render_template("edit_character.html", carebears=the_character, categories=all_categories, voice_actor=the_voice_actor)
 
 
 @app.route('/update_character/<character_id>', methods=['POST'])
 def update_character(character_id):
     formValues = request.form.to_dict()
+
+    character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)}) #looking for one bear only
+
+    if character['image_path'] is None:
+        # upload an image from form
+        path = upload_image(request.files)
+        formValues['image_path'] = None
+        if path is not None:
+            formValues['image_path'] = path
+    else:
+        formValues['image_path'] = character['image_path']
 
     voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
     if(voice_actor_db is None):
@@ -155,28 +222,21 @@ def update_character(character_id):
     formValues['voice_actor_id'] = voice_actor_db['_id']
     formValues['category_id'] = ObjectId(formValues['category_id'])
 
-    character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)}) #looking for one bear only
-    character.update({'_id': ObjectId(character_id)},
+    mongo.db.carebears_collection.update({'_id': ObjectId(character_id)},
     {
         'character_name': formValues['character_name'],
-        'category_id': formValues['catergory_id'],
+        'category_id': formValues['category_id'],
         'color': formValues['color'],
         'belly_badge': formValues['belly_badge'],
         'gender': formValues['gender'],
         'residence': formValues['residence'],
         'release_date': formValues['release_date'],
         'voice_actor_id': formValues['voice_actor_id'],
-        'story': formValues['story']
+        'story': formValues['story'],
+        'image_path': formValues['image_path']
     })
-   
-    #added
-    category_name = mongo.db.categories.find_one( { "_id": character['category_id'] } )['category_name']
-    voice_actor_name = mongo.db.voice_actor.find_one( { "_id": character['voice_actor_id'] } )['voice_actor']
 
-    character['category_name'] = category_name
-    character['voice_actor_name'] = voice_actor_name
-    
-    return render_template("carebear_info.html", character=character)
+    return redirect(url_for('character_info', character_id=character['_id']))
     #end add
 
 @app.route('/insert_character', methods=['POST'])

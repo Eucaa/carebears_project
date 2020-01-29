@@ -8,7 +8,7 @@
     </div>
 </div>
 <div class="container">
-    <form>
+    <form action="{{ url_for('update_character', character_id=carebears._id) }}" method="POST" enctype="multipart/form-data">
         <div class="form-row text-center">
             <div class="form-group mx-auto col-md-4">
                 <label for="character_name">Character Name</label>
@@ -16,9 +16,12 @@
             </div>
         </div>
         <div class="form-row">
+            {% if carebears.image_path == None %}
             <div class="form-group mx-auto col-md-4">
-                <input type="file" id="image" name="image" href="{{url_for('uploaded_file', character_id=carebears._id)}}" class="btn btn-secondary homesearch_btn_size_adjust" accept='image/*'/>
+                <label for="residence">Add Image</label>
+                <input type="file" name="image" class="form-control reposition_addImage_btn" accept='image/*'/>
             </div>
+            {% endif %}
             <div class="form-group mx-auto col-md-4">
                 <label for="gender">Gender</label>
                 <select id="gender" class="form-control" name="gender">
@@ -49,7 +52,7 @@
         <div class="form-row">
             <div class="form-group mx-auto col-md-4">
                 <label for="category_name">Character Category</label>
-                <select id="category" class="form-control" name="category_name">
+                <select id="category" class="form-control" name="category_id">
                     {% if carebears.category_id == None %}
                         <option value="" selected>Choose Option...</option>
                     {% else %}
@@ -105,7 +108,7 @@
         <div class="form-row">
             <div class="form-group mx-auto col-md-4">
                 <label for="color">Main Color</label>
-                <input type="email" class="form-control" id="color" name="color" placeholder="Main color of character (fur/clothes etc.)" value="{{carebears.color}}">
+                <input type="text" class="form-control" id="color" name="color" placeholder="Main color of character (fur/clothes etc.)" value="{{carebears.color}}">
             </div>
             <div class="form-group mx-auto col-md-4">
                 <label for="release_date">Release Date (YYYY/MM/DD)</label>
@@ -117,17 +120,17 @@
         <div class="form-row">
             <div class="form-group mx-auto col-md-4">
                 <label for="belly_badge">Belly Badge description</label>
-                <input type="email" class="form-control" id="belly_badge" name="belly_badge" placeholder="e.g. Heart Star Crown" value="{{carebears.belly_badge}}"> 
+                <input type="text" class="form-control" id="belly_badge" name="belly_badge" placeholder="e.g. Heart Star Crown" value="{{carebears.belly_badge}}"> 
             </div>
             <div class="form-group mx-auto col-md-4">
                 <label for="voice_actor">Voice Actor/ Actress</label>
-                <input type="text" class="form-control" id="voice_actor" name="voice_actor_name" placeholder="Name of original voice actor" value="{{carebears.voice_actor}}">
+                <input type="text" class="form-control" id="voice_actor" name="voice_actor_name" placeholder="Name of original voice actor" value="{{voice_actor.voice_actor}}">
             </div>
         </div>
         
         <div class="form-group text-center">
-                <label for="exampleFormControlTextarea1">Character Story</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="You can write a small story about the character in here..." value="carebears.story"></textarea>
+                <label for="story">Character Story</label>
+                <textarea class="form-control" id="story" name="story" rows="4" placeholder="You can write a small story about the character in here...">{{carebears.story}}</textarea>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="gridCheck">
                 <label class="form-check-label" for="gridCheck">
@@ -137,7 +140,7 @@
         </div>
         <div class="form-row text-center">
             <div class="col-12">
-                <a href="{{url_for('character_list')}}" class="btn btn-primary" type="submit">Edit Character</a>
+                <button type="submit" class="btn btn-primary">Edit Character</button>
             </div>
         </div>
     </form>
