@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
+import base64
 
 app = Flask(__name__)
 app.config['IMAGE_UPLOAD'] = '/static/upload'
@@ -27,17 +28,8 @@ def about():
 
 @app.route('/character_list')
 def character_list():
-    listOfCharacterFromDb = list(mongo.db.carebears_collection.find())
-    count = 0
-    for character in listOfCharacterFromDb:
-        category_name = mongo.db.categories.find_one( { "_id": character['category_id'] } )['category_name']
-        voice_actor_name = mongo.db.voice_actor.find_one( { "_id": character['voice_actor_id'] } )['voice_actor']
-
-        listOfCharacterFromDb[count]['category_name'] = category_name
-        listOfCharacterFromDb[count]['voice_actor_name'] = voice_actor_name
-        count = count + 1
-
-    return render_template("character_list.html", characters=listOfCharacterFromDb)
+    results = list(mongo.db.carebears_collection.aggregate(createSearchQuery(None)))
+    return render_template("character_list.html", characters=results)
 
 
 @app.route('/get_carebears_collection')
@@ -64,17 +56,20 @@ def addBear():
 @app.route('/carebear_info/<character_id>')
 def character_info(character_id):
     characterFromDb = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
-    print(characterFromDb)
     category_name = mongo.db.categories.find_one( { "_id": characterFromDb['category_id'] } )['category_name']
     voice_actor_name = mongo.db.voice_actor.find_one( { "_id": characterFromDb['voice_actor_id'] } )['voice_actor']
 
     characterFromDb['category_name'] = category_name
     characterFromDb['voice_actor_name'] = voice_actor_name
 
-    return render_template("carebear_info.html", character=characterFromDb)
+    image = None
+    if characterFromDb['image_blob'] is not None:
+        image = characterFromDb['image_blob'].decode()
+
+    return render_template("carebear_info.html", character=characterFromDb, image=image)
 
 
-def upload_image(files):
+def encode_image(files):
     if files is None:
         return None
 
@@ -104,17 +99,8 @@ def upload_image(files):
     if not allowed_image(image.filename):
         print("File not allowed")
         return None
-
-    fileName = secure_filename(image.filename)
-    directory = os.path.join(os.getcwd(), app.config["IMAGE_UPLOAD"][1:])
-
-    # check if upload directory exists else create it
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    filePath = os.path.join(directory, fileName)    
-    image.save(filePath)
-    return os.path.join(app.config["IMAGE_UPLOAD"], fileName) 
+    encoded = base64.b64encode(image.read())
+    return encoded
 
 
 def allowed_image(filename):
@@ -140,17 +126,8 @@ def allowed_image_filesize(filesize):
         return False
 
 
-@app.route('/character-search')
-def search():
-    search = request.args.get('search')
-    results = list(mongo.db.carebears_collection.aggregate([
-        {
-            "$match": {
-                "$text": {
-                    "$search": search
-                }
-            }
-        },
+def createSearchQuery(search):
+    searchQuery = [
         {
             "$lookup": {
                 "from": "categories",
@@ -174,6 +151,11 @@ def search():
             "$unwind": "$voiceactors"
         },
         {
+            "$sort": {
+                "character_name": 1
+            }
+        },
+        {
             "$project": {
                 "_id": 1,
                 "character_name": 1,
@@ -187,7 +169,24 @@ def search():
                 "voice_actor_name": "$voiceactors.voice_actor"
             }
         }
-    ]))
+    ]
+    if search is not None:
+        matchQuery = {
+            "$match": {
+                "$text": {
+                    "$search": search
+                }
+            }
+        }
+        searchQuery.insert(0, matchQuery)
+        return searchQuery
+    else:
+        return searchQuery
+
+@app.route('/character-search')
+def search():
+    searchQuery = createSearchQuery(request.args.get('search'))
+    results = list(mongo.db.carebears_collection.aggregate(searchQuery))
 
     return render_template("character_list.html", characters=results)
 
@@ -205,21 +204,28 @@ def update_character(character_id):
 
     character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)}) #looking for one bear only
 
-    if character['image_path'] is None:
+    if character['image_blob'] is None:
         # upload an image from form
-        path = upload_image(request.files)
-        formValues['image_path'] = None
-        if path is not None:
-            formValues['image_path'] = path
+        imgAsBase64 = encode_image(request.files)
+        if imgAsBase64 is not None:
+            formValues['image_blob'] = imgAsBase64
+        else:
+            formValues['image_blob'] = None
     else:
-        formValues['image_path'] = character['image_path']
+        formValues['image_blob'] = character['image_blob']
 
     voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
     if(voice_actor_db is None):
         # aanmaken
         mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
         voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
-    
+
+    if formValues['gender'] == 'Invalid':
+        formValues['gender'] = None
+
+    if formValues['residence'] == 'Invalid':
+        formValues['residence'] = None
+
     formValues['voice_actor_id'] = voice_actor_db['_id']
     formValues['category_id'] = ObjectId(formValues['category_id'])
 
@@ -234,7 +240,7 @@ def update_character(character_id):
         'release_date': formValues['release_date'],
         'voice_actor_id': formValues['voice_actor_id'],
         'story': formValues['story'],
-        'image_path': formValues['image_path']
+        'image_blob': formValues['image_blob']
     })
 
     return redirect(url_for('character_info', character_id=character['_id']))
@@ -246,9 +252,9 @@ def insert_character():
     formValues = request.form.to_dict()
 
     # upload an image from form
-    path = upload_image(request.files)
-    if path is not None:
-        formValues['image_path'] = path
+    imgAsBase64 = encode_image(request.files)
+    if imgAsBase64 is not None:
+        formValues['image_blob'] = imgAsBase64
 
     voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
     if(voice_actor_db is None):
@@ -258,6 +264,12 @@ def insert_character():
 
     formValues['voice_actor_id'] = voice_actor_db['_id']
     formValues['category_id'] = ObjectId(formValues['category_id'])
+
+    if formValues['gender'] == 'Invalid':
+        formValues['gender'] = None
+
+    if formValues['residence'] == 'Invalid':
+        formValues['residence'] = None
 
     formValues.pop('voice_actor_name', None)
     formValues.pop('image', None)

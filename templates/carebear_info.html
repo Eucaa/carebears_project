@@ -20,7 +20,7 @@
     <div class="row justify-content-between">
         {% if character.image_path != None %}  
         <div class="col-sm-6 text-center">
-            <img class="character_sizing" src="{{character.image_path}}" alt="carebears image" />            
+            <img class="character_sizing" src="data:image;charset=utf-8;base64, {{image}}" alt="carebears image" />            
         </div>
         {% else %}
         <div class="col-sm-6 text-center">

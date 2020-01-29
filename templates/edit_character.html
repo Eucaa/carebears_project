@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="form-row">
-            {% if carebears.image_path == None %}
+            {% if carebears.image_blob == None %}
             <div class="form-group mx-auto col-md-4">
                 <label for="residence">Add Image</label>
                 <input type="file" name="image" class="form-control reposition_addImage_btn" accept='image/*'/>
@@ -26,22 +26,22 @@
                 <label for="gender">Gender</label>
                 <select id="gender" class="form-control" name="gender">
                     {% if carebears.gender == None %}                    
-                        <option value="" selected>Choose Option...</option>
+                        <option value="Invalid" selected>Choose Option...</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.gender == "Male" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Male" selected>Male</option>
                         <option value="Female">Female</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.gender == "Female" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Male">Male</option>
                         <option value="Female" selected>Female</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.gender == "Unknown" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Unknown" selected>Unknown</option>
@@ -72,7 +72,7 @@
                 <label for="residence">Residence(nationality)</label>
                 <select id="residence" class="form-control" name="residence">
                     {% if carebears.residence == None %}
-                        <option value="" selected>Choose Option...</option>
+                        <option value="Invalid" selected>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
@@ -80,7 +80,7 @@
                         <option value="Cold Heart Castle">Cold Heart Castle</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Care-a-Lot" %}    
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Care-a-Lot" selected>Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
@@ -88,7 +88,7 @@
                         <option value="Cold Heart Castle">Cold Heart Castle</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Adventure Beach" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach" selected>Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
@@ -96,7 +96,7 @@
                         <option value="Cold Heart Castle">Cold Heart Castle</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Forest of Feelings" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings" selected>Forest of Feelings</option>
@@ -104,7 +104,7 @@
                         <option value="Cold Heart Castle">Cold Heart Castle</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Earth" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
@@ -112,7 +112,7 @@
                         <option value="Cold Heart Castle">Cold Heart Castle</option>
                         <option value="Unknown">Unknown</option>
                     {% elif carebears.residence == "Cold Heart Castle" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
@@ -120,7 +120,7 @@
                         <option value="Cold Heart Castle" selected>Cold Heart Castle</option>
                         <option value="Unknown">Unknown</option>    
                     {% elif carebears.residence == "Unknown" %}
-                        <option value="" disabled>Choose Option...</option>
+                        <option value="Invalid" disabled>Choose Option...</option>
                         <option value="Care-a-Lot">Care-a-Lot</option>
                         <option value="Adventure Beach">Adventure Beach</option>
                         <option value="Forest of Feelings">Forest of Feelings</option>
