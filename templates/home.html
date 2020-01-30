@@ -6,7 +6,7 @@
         <div class="inner_div">
             <div class="container-fluid">
                 <div class="row">
-                    <img src="static/css/img/care-bears-base.png" class="img-fluid base_logo_resize" alt="carebears image">
+                    <img src="{{url_for('static', filename='css/img/care-bears-base.png')}}" class="img-fluid base_logo_resize" alt="carebears image">
                 </div>
                 <form action="character-search" method="GET">
                     <input type="text" class="search_input" placeholder="Search... (e.g. yellow, moon, companion or a name)" name="search"/></br>
