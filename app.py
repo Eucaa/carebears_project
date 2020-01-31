@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-import base64
+import base64, random
 
 app = Flask(__name__)
 app.config['IMAGE_UPLOAD'] = '/static/upload'
@@ -17,7 +17,25 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def home():
-    return render_template("home.html")
+    collection = list(mongo.db.carebears_collection.find())
+    maxRows = mongo.db.carebears_collection.count_documents({})
+    print(maxRows)
+
+    randomNumber = random.randint(0, maxRows - 1)
+    randomCharacter = collection[randomNumber]
+    randomCharacter['image'] = None
+
+    if randomCharacter['image_blob'] is not None:
+        randomCharacter['image'] = randomCharacter['image_blob'].decode()
+
+    randomNumberTwo = random.randint(0, maxRows - 1)
+    randomCharacterTwo = collection[randomNumberTwo]
+    randomCharacterTwo['image'] = None
+
+    if randomCharacterTwo['image_blob'] is not None:
+        randomCharacterTwo['image'] = randomCharacterTwo['image_blob'].decode()    
+
+    return render_template("home.html", character=randomCharacter, characterTwo=randomCharacterTwo)
 
 
 @app.route('/about')

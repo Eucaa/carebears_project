@@ -11,11 +11,28 @@
                 <form action="character-search" method="GET">
                     <input type="text" class="search_input" placeholder="Search... (e.g. yellow, moon, companion or a name)" name="search"/></br>
                     <button type="submit" class="btn btn-secondary homesearch_btn_size">Search</button>
-                    <a href="{{url_for('carebears_collection')}}" class="btn btn-secondary homesearch_btn_size" style="display:none;">Advanced Search</a>
+                    <a href="{{url_for('character_list')}}" class="btn btn-secondary homesearch_btn_size" >See all characters</a>
                 </form>
+            </div>
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                        <h6>Featured character</h6>
+                        <a class="navbar-brand" href="{{url_for('character_info', character_id=character._id)}}">
+                            <img class="icon_styling" src="data:image;charset=utf-8;base64, {{character.image}}">
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <h6>Featured character</h6>
+                        <a class="navbar-brand" href="{{url_for('character_info', character_id=characterTwo._id)}}">
+                            <img class="icon_styling" src="data:image;charset=utf-8;base64, {{characterTwo.image}}">
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div> 
 </div>
+
 
 {% endblock %}

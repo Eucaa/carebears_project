@@ -65,11 +65,9 @@ body {
 }
 
 .home_icon {
-    height: 35px;
-    width: 55px;
-    padding-left: 2px;
-    padding-right: 0px;
-    margin: 5px;
+    height: 50px;
+    width: 100px;
+    margin-left: 10px;
 }
 
 .quicksand {
@@ -92,7 +90,17 @@ body {
     padding: 20px;
 }
 
+.navbar-margin-right {
+    margin-right: 15px;
+}
+
 /*--- Unique classes ---*/
+
+/*--- home view ---*/
+.icon_styling {
+    height: 100px;
+}
+
 
 /*--- about view ---*/
 
