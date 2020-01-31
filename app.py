@@ -2,7 +2,6 @@ import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-from werkzeug.utils import secure_filename
 import base64
 
 app = Flask(__name__)
@@ -49,18 +48,19 @@ def signIn():
 
 @app.route('/character_creation')
 def addBear():
-    print("Updated")
     return render_template("add_bear.html", characters=mongo.db.carebears_collection.find(), categories=mongo.db.categories.find())
 
 
 @app.route('/carebear_info/<character_id>')
 def character_info(character_id):
     characterFromDb = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
-    category_name = mongo.db.categories.find_one( { "_id": characterFromDb['category_id'] } )['category_name']
-    voice_actor_name = mongo.db.voice_actor.find_one( { "_id": characterFromDb['voice_actor_id'] } )['voice_actor']
+    if characterFromDb['category_id'] is not None:
+        category_name = mongo.db.categories.find_one( { "_id": characterFromDb['category_id'] } )['category_name']        
+        characterFromDb['category_name'] = category_name
 
-    characterFromDb['category_name'] = category_name
-    characterFromDb['voice_actor_name'] = voice_actor_name
+    if characterFromDb['voice_actor_id'] is not None:
+        voice_actor_name = mongo.db.voice_actor.find_one( { "_id": characterFromDb['voice_actor_id'] } )['voice_actor']
+        characterFromDb['voice_actor_name'] = voice_actor_name
 
     image = None
     if characterFromDb['image_blob'] is not None:
@@ -137,7 +137,10 @@ def createSearchQuery(search):
             }
         },
         {
-            "$unwind": "$categories"
+            "$unwind": {
+                "path": "$categories",
+                "preserveNullAndEmptyArrays": True
+            }
         },
         {
             "$lookup": {
@@ -148,7 +151,10 @@ def createSearchQuery(search):
             }
         },
         {
-            "$unwind": "$voiceactors"
+            "$unwind": {
+                "path": "$voiceactors",
+                "preserveNullAndEmptyArrays": True
+            }
         },
         {
             "$sort": {
@@ -187,6 +193,7 @@ def createSearchQuery(search):
 def search():
     searchQuery = createSearchQuery(request.args.get('search'))
     results = list(mongo.db.carebears_collection.aggregate(searchQuery))
+    print(results)
 
     return render_template("character_list.html", characters=results)
 
@@ -214,11 +221,20 @@ def update_character(character_id):
     else:
         formValues['image_blob'] = character['image_blob']
 
-    voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
-    if(voice_actor_db is None):
-        # aanmaken
-        mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
+    if formValues['voice_actor_name'] != "":
         voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
+        if(voice_actor_db is None):
+            # aanmaken
+            mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
+            voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
+        formValues['voice_actor_id'] = voice_actor_db['_id']        
+    else:
+        formValues['voice_actor_id'] = None
+
+    if formValues['category_id'] == 'Invalid':
+        formValues['category_id'] = None
+    else:
+        formValues['category_id'] = ObjectId(formValues['category_id'])
 
     if formValues['gender'] == 'Invalid':
         formValues['gender'] = None
@@ -226,8 +242,6 @@ def update_character(character_id):
     if formValues['residence'] == 'Invalid':
         formValues['residence'] = None
 
-    formValues['voice_actor_id'] = voice_actor_db['_id']
-    formValues['category_id'] = ObjectId(formValues['category_id'])
 
     mongo.db.carebears_collection.update({'_id': ObjectId(character_id)},
     {
@@ -255,15 +269,24 @@ def insert_character():
     imgAsBase64 = encode_image(request.files)
     if imgAsBase64 is not None:
         formValues['image_blob'] = imgAsBase64
+    else:
+        formValues['image_blob'] = None
 
-    voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
-    if(voice_actor_db is None):
-        # aanmaken
-        mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
+    if formValues['voice_actor_name'] != "":
         voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
+        if(voice_actor_db is None):
+            # aanmaken
+            mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
+            voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
 
-    formValues['voice_actor_id'] = voice_actor_db['_id']
-    formValues['category_id'] = ObjectId(formValues['category_id'])
+        formValues['voice_actor_id'] = voice_actor_db['_id']
+    else:
+        formValues['voice_actor_id'] = None
+
+    if formValues['category_id'] == 'Invalid':
+        formValues['category_id'] = None
+    else:
+        formValues['category_id'] = ObjectId(formValues['category_id'])
 
     if formValues['gender'] == 'Invalid':
         formValues['gender'] = None
