@@ -23,6 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% if characters %}
                         {% for character in characters %}
                             <tr>
                             <td>{{character.character_name}}</td>
@@ -36,6 +37,13 @@
                             <td><a href="{{url_for('character_info', character_id=character._id)}}">Details</a></td>
                             </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                        <td colspan="10"> No results found. 
+                        <a href="{{url_for('home')}}">Try again</a>
+                        </td>
+                        </tr>
+                        {% endif %}
                         </tbody>
                     </table>
                 </div>

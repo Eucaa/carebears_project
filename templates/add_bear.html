@@ -23,7 +23,7 @@
             </div>
             <div class="form-group mx-auto col-md-4">
                 <label for="gender">Gender</label>
-                <select id="gene" class="form-control" name="gender">
+                <select id="gender" class="form-control" name="gender">
                     <option value="Invalid" selected>Choose Option...</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -35,7 +35,7 @@
         <div class="form-row">
             <div class="form-group mx-auto col-md-4">
                 <label for="category_name">Character Category</label>
-                <select id="category" class="form-control" name="category_id">
+                <select id="category_name" class="form-control" name="category_id">
                     <option value="Invalid" selected>Choose Option...</option>
                     {% for cat in categories %}
                         <option value="{{cat._id}}">{{cat.category_name}}</option>
@@ -43,7 +43,7 @@
                 </select>
             </div>
             <div class="form-group mx-auto col-md-4">
-                <label for="residence">Residence(nationality)</label>
+                <label for="residence">Residence (nationality)</label>
                 <select id="residence" class="form-control" name="residence">
                     <option value="Invalid" selected>Choose Option...</option>
                     <option value="Care-a-Lot">Care-a-Lot</option>
@@ -61,7 +61,7 @@
                 <input type="text" class="form-control" id="color" name="color" placeholder="Main color of character (fur/clothes etc.)"/>
             </div>
             <div class="form-group mx-auto col-md-4">
-                <label for="release_date">Release Date (YYYY/MM/DD)</label>
+                <label for="datepicker">Release Date (YYYY/MM/DD)</label>
                     <div class="input-group date">
                         <input class="form-control" id="datepicker" name="release_date" placeholder="Original release date"/>
                     </div>

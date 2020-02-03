@@ -2,91 +2,117 @@ import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-import base64, random
+import base64
+import random
 
 app = Flask(__name__)
 app.config['IMAGE_UPLOAD'] = '/static/upload'
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG"]
 app.config['MAX_IMAGE_SIZE'] = 3 * 1024 * 1024  # max mb = 3mb
 
+
+def getMongoString():
+    mongo = os.environ.get('MONGODB_CONNECTIONSTRING', 'mongodb://localhost')
+    mongo += "/"
+    mongo += app.config["MONGO_DBNAME"]
+    mongo += "?retryWrites=true&w=majority"
+    return mongo
+
+
 app.config["MONGO_DBNAME"] = 'carebears_db'
-app.config["MONGO_URI"] = os.environ.get('MONGODB_CONNECTIONSTRING', 'mongodb://localhost') + "/" + app.config["MONGO_DBNAME"] + "?retryWrites=true&w=majority"
+app.config["MONGO_URI"] = getMongoString()
 
 mongo = PyMongo(app)
 
-
+# Features two random characters from the database who are not the same
+# and contain an image.
 @app.route('/')
 def home():
-    collection = list(mongo.db.carebears_collection.find())
-    maxRows = mongo.db.carebears_collection.count_documents({})
-    print(maxRows)
+    collection = list(mongo.db.carebears_collection.find(
+        {
+            "image_blob": {
+                "$ne": None
+            }
+        }))
+    maxRows = len(collection)
 
     randomNumber = random.randint(0, maxRows - 1)
+    otherRandomNumber = -1
+
+    while otherRandomNumber == -1 or otherRandomNumber == randomNumber:
+        otherRandomNumber = random.randint(0, maxRows - 1)
+
     randomCharacter = collection[randomNumber]
-    randomCharacter['image'] = None
+    randomCharacter['image'] = randomCharacter['image_blob'].decode()
 
-    if randomCharacter['image_blob'] is not None:
-        randomCharacter['image'] = randomCharacter['image_blob'].decode()
+    randomCharacterTwo = collection[otherRandomNumber]
+    randomCharacterTwo['image'] = randomCharacterTwo['image_blob'].decode()
 
-    randomNumberTwo = random.randint(0, maxRows - 1)
-    randomCharacterTwo = collection[randomNumberTwo]
-    randomCharacterTwo['image'] = None
+    return render_template("home.html",
+                           character=randomCharacter,
+                           characterTwo=randomCharacterTwo)
 
-    if randomCharacterTwo['image_blob'] is not None:
-        randomCharacterTwo['image'] = randomCharacterTwo['image_blob'].decode()    
-
-    return render_template("home.html", character=randomCharacter, characterTwo=randomCharacterTwo)
-
-
+# Renders about template.
 @app.route('/about')
 def about():
     return render_template("about.html")
 
-
+# Renders template with list of all characters in database.
 @app.route('/character_list')
 def character_list():
-    results = list(mongo.db.carebears_collection.aggregate(createSearchQuery(None)))
+    query = createSearchQuery(None)
+    results = list(mongo.db.carebears_collection.aggregate(query))
     return render_template("character_list.html", characters=results)
 
-
-@app.route('/get_carebears_collection')
-def carebears_collection():
-    return render_template("carebears_collection.html", collection=mongo.db.carebears_collection.find())
-
-
+# Static page, functionality can be added later.
 @app.route('/sign_up')
 def signUp():
     return render_template("sign_up.html")
 
-
+# Static page, functionality can be added later.
 @app.route('/sign_in')
 def signIn():
     return render_template("sign_in.html")
 
-
+# Renders character creation template with possible options.
 @app.route('/character_creation')
 def addBear():
-    return render_template("add_bear.html", characters=mongo.db.carebears_collection.find(), categories=mongo.db.categories.find())
+    return render_template("add_bear.html",
+                           characters=mongo.db.carebears_collection.find(),
+                           categories=mongo.db.categories.find())
 
-
+# Renders availalble character information.
 @app.route('/carebear_info/<character_id>')
 def character_info(character_id):
-    characterFromDb = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
+    characterFromDb = mongo.db.carebears_collection.find_one(
+        {
+            "_id": ObjectId(character_id)
+        })
+
     if characterFromDb['category_id'] is not None:
-        category_name = mongo.db.categories.find_one( { "_id": characterFromDb['category_id'] } )['category_name']        
+        category_name = mongo.db.categories.find_one(
+            {
+                "_id": characterFromDb['category_id']
+            })['category_name']
         characterFromDb['category_name'] = category_name
 
     if characterFromDb['voice_actor_id'] is not None:
-        voice_actor_name = mongo.db.voice_actor.find_one( { "_id": characterFromDb['voice_actor_id'] } )['voice_actor']
+        voice_actor_name = mongo.db.voice_actor.find_one(
+            {
+                "_id": characterFromDb['voice_actor_id']
+            })['voice_actor']
         characterFromDb['voice_actor_name'] = voice_actor_name
 
     image = None
     if characterFromDb['image_blob'] is not None:
         image = characterFromDb['image_blob'].decode()
 
-    return render_template("carebear_info.html", character=characterFromDb, image=image)
+    return render_template("carebear_info.html",
+                           character=characterFromDb,
+                           image=image)
 
 
+# Image allowment and saving function
 def encode_image(files):
     if files is None:
         return None
@@ -94,7 +120,7 @@ def encode_image(files):
     if len(files) == 0:
         return None
 
-    # create handle for the image.
+    # create handle for the image
     image = files['image']
 
     # seek till end of file
@@ -103,7 +129,7 @@ def encode_image(files):
     # determine file length in bytes
     file_length = image.tell()
 
-    # reset stream position back to 0 so we can later process the complete file.
+    # reset stream position back to 0 so we can later process the complete file
     image.seek(0)
 
     if not allowed_image_filesize(file_length):
@@ -144,6 +170,7 @@ def allowed_image_filesize(filesize):
         return False
 
 
+# Search bar funcitonality based on matching words, available in the database.
 def createSearchQuery(search):
     searchQuery = [
         {
@@ -207,6 +234,7 @@ def createSearchQuery(search):
     else:
         return searchQuery
 
+
 @app.route('/character-search')
 def search():
     searchQuery = createSearchQuery(request.args.get('search'))
@@ -215,19 +243,32 @@ def search():
 
     return render_template("character_list.html", characters=results)
 
+# Edit a character through the character's ID.
 @app.route('/edit_character/<character_id>')
 def edit_character(character_id):
-    the_character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)})
+    the_character = mongo.db.carebears_collection.find_one(
+        {
+            "_id": ObjectId(character_id)
+        })
     all_categories = mongo.db.categories.find()
-    the_voice_actor = mongo.db.voice_actor.find_one({'_id': the_character['voice_actor_id']})
-    return render_template("edit_character.html", carebears=the_character, categories=all_categories, voice_actor=the_voice_actor)
+    the_voice_actor = mongo.db.voice_actor.find_one(
+        {
+            "_id": the_character['voice_actor_id']
+        })
+    return render_template("edit_character.html",
+                           carebears=the_character,
+                           categories=all_categories,
+                           voice_actor=the_voice_actor)
 
-
+# update character data through the character's ID.
 @app.route('/update_character/<character_id>', methods=['POST'])
 def update_character(character_id):
     formValues = request.form.to_dict()
 
-    character = mongo.db.carebears_collection.find_one({'_id': ObjectId(character_id)}) #looking for one bear only
+    character = mongo.db.carebears_collection.find_one(
+        {
+            "_id": ObjectId(character_id)
+        })  # looking for one bear only
 
     if character['image_blob'] is None:
         # upload an image from form
@@ -240,12 +281,21 @@ def update_character(character_id):
         formValues['image_blob'] = character['image_blob']
 
     if formValues['voice_actor_name'] != "":
-        voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
+        voice_actor_db = mongo.db.voice_actor.find_one(
+            {
+                'voice_actor': formValues['voice_actor_name']
+            })
         if(voice_actor_db is None):
-            # aanmaken
-            mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
-            voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
-        formValues['voice_actor_id'] = voice_actor_db['_id']        
+            # create
+            mongo.db.voice_actor.insert_one(
+                {
+                    'voice_actor': formValues['voice_actor_name']
+                })
+            voice_actor_db = mongo.db.voice_actor.find_one(
+                {
+                    'voice_actor': formValues['voice_actor_name']
+                })
+        formValues['voice_actor_id'] = voice_actor_db["_id"]
     else:
         formValues['voice_actor_id'] = None
 
@@ -260,23 +310,25 @@ def update_character(character_id):
     if formValues['residence'] == 'Invalid':
         formValues['residence'] = None
 
+    mongo.db.carebears_collection.update(
+        {
+            "_id": ObjectId(character_id)
+        },
+        {
+            'character_name': formValues['character_name'],
+            'category_id': formValues['category_id'],
+            'color': formValues['color'],
+            'belly_badge': formValues['belly_badge'],
+            'gender': formValues['gender'],
+            'residence': formValues['residence'],
+            'release_date': formValues['release_date'],
+            'voice_actor_id': formValues['voice_actor_id'],
+            'story': formValues['story'],
+            'image_blob': formValues['image_blob']
+        })
 
-    mongo.db.carebears_collection.update({'_id': ObjectId(character_id)},
-    {
-        'character_name': formValues['character_name'],
-        'category_id': formValues['category_id'],
-        'color': formValues['color'],
-        'belly_badge': formValues['belly_badge'],
-        'gender': formValues['gender'],
-        'residence': formValues['residence'],
-        'release_date': formValues['release_date'],
-        'voice_actor_id': formValues['voice_actor_id'],
-        'story': formValues['story'],
-        'image_blob': formValues['image_blob']
-    })
-
-    return redirect(url_for('character_info', character_id=character['_id']))
-    #end add
+    return redirect(url_for('character_info', character_id=character["_id"]))
+    # end add
 
 
 @app.route('/insert_character', methods=['POST'])
@@ -291,13 +343,22 @@ def insert_character():
         formValues['image_blob'] = None
 
     if formValues['voice_actor_name'] != "":
-        voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
+        voice_actor_db = mongo.db.voice_actor.find_one(
+            {
+                'voice_actor': formValues['voice_actor_name']
+            })
         if(voice_actor_db is None):
-            # aanmaken
-            mongo.db.voice_actor.insert_one({'voice_actor': formValues['voice_actor_name']})
-            voice_actor_db = mongo.db.voice_actor.find_one({'voice_actor': formValues['voice_actor_name']})
+            # create
+            mongo.db.voice_actor.insert_one(
+                {
+                    'voice_actor': formValues['voice_actor_name']
+                })
+            voice_actor_db = mongo.db.voice_actor.find_one(
+                {
+                    'voice_actor': formValues['voice_actor_name']
+                })
 
-        formValues['voice_actor_id'] = voice_actor_db['_id']
+        formValues['voice_actor_id'] = voice_actor_db["_id"]
     else:
         formValues['voice_actor_id'] = None
 
@@ -318,10 +379,10 @@ def insert_character():
     mongo.db.carebears_collection.insert_one(formValues)
     return redirect(url_for('character_list'))
 
-
+# Deletes all character information.
 @app.route('/delete_character/<character_id>')
 def delete_character(character_id):
-    mongo.db.carebears_collection.remove({'_id': ObjectId(character_id)})
+    mongo.db.carebears_collection.remove({"_id": ObjectId(character_id)})
     return redirect(url_for('character_list'))
 
 

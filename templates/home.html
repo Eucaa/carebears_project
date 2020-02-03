@@ -9,23 +9,25 @@
                     <img src="{{url_for('static', filename='css/img/care-bears-base.png')}}" class="img-fluid base_logo_resize" alt="carebears image">
                 </div>
                 <form action="character-search" method="GET">
-                    <input type="text" class="search_input" placeholder="Search... (e.g. yellow, moon, companion or a name)" name="search"/></br>
+                    <input type="text" class="search_input" placeholder="Search... (e.g. yellow, moon, companion or a name)" name="search"/>
+                    <div>
                     <button type="submit" class="btn btn-secondary homesearch_btn_size">Search</button>
                     <a href="{{url_for('character_list')}}" class="btn btn-secondary homesearch_btn_size" >See all characters</a>
+                    </div>
                 </form>
             </div>
             <div class="container">
                 <div class="row justify-content-between">
                     <div class="col-4">
                         <h6>Featured character</h6>
-                        <a class="navbar-brand" href="{{url_for('character_info', character_id=character._id)}}">
-                            <img class="icon_styling" src="data:image;charset=utf-8;base64, {{character.image}}">
+                        <a class="navbar-brand" href="{{url_for('character_info', character_id=character._id)}}" alt="featured image">
+                            <img class="icon_styling" src="data:image/jpeg;charset=utf-8;base64,{{character.image}}" alt="featured image">
                         </a>
                     </div>
                     <div class="col-4">
                         <h6>Featured character</h6>
                         <a class="navbar-brand" href="{{url_for('character_info', character_id=characterTwo._id)}}">
-                            <img class="icon_styling" src="data:image;charset=utf-8;base64, {{characterTwo.image}}">
+                            <img class="icon_styling" src="data:image/jpeg;charset=utf-8;base64,{{characterTwo.image}}" alt="featured image">
                         </a>
                     </div>
                 </div>
