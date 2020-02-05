@@ -182,7 +182,7 @@ It can be installed with the following steps:
 
 - Click More > Restart all Dynos
 
-- Application is live at https://your-app-name.herokuapp.com/
+- Application is live at https://carebear-db.herokuapp.com/
 
 ### The repository can be found on:
 
@@ -198,10 +198,10 @@ CodePen community
 
 ### Media Sources
 ____
-Images to decorate the application have been taken from 
-[care bears fandom](https://carebears.fandom.com/wiki/Care_Bear_Wiki)
-[getwallpapers.com](http://getwallpapers.com/collection/care-bears-wallpaper-backgrounds)
-[cleanpng.com](https://www.cleanpng.com/free/care-bear.html)
+Images to decorate the application have been taken from  
+[care bears fandom](https://carebears.fandom.com/wiki/Care_Bear_Wiki)  
+[getwallpapers.com](http://getwallpapers.com/collection/care-bears-wallpaper-backgrounds)  
+[cleanpng.com](https://www.cleanpng.com/free/care-bear.html)  
 
 
 ### Acknowledgement
