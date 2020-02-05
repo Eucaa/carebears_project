@@ -10,7 +10,7 @@ and add and adjust information regarding their favorite caharcter from the serie
 the interst of unfamiliars. Since the series has been running from the '80 and it's concept is still running in a new shape today, there will be lots of 
 potential to enhance this database into further depths for many years to come.
 
-You can visit the Care Bears Database home page from here: [_Care Bears Database_](https://carebear-db.herokuapp.com/).
+You can visit the Care Bears Database home page from here: [_Care Bears Database_](https://carebear-db.herokuapp.com).
 
 ## UX
 ____
@@ -196,11 +196,12 @@ Stack Overflow community
 CodePen community
 
 
-### Media
+### Media Sources
 ____
-Images have been taken from 
+Images to decorate the application have been taken from 
 [care bears fandom](https://carebears.fandom.com/wiki/Care_Bear_Wiki)
 [getwallpapers.com](http://getwallpapers.com/collection/care-bears-wallpaper-backgrounds)
+[cleanpng.com](https://www.cleanpng.com/free/care-bear.html)
 
 
 ### Acknowledgement
