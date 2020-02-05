@@ -39,12 +39,12 @@ ____
 
 ### Wireframes
 ____
-The original wireframes of the project: [_Wireframes_](wireframes_and_ERD/Care Bear DB original wireframes.pdf)
+The original wireframes of the project: [_Wireframes_](https://github.com/Eucaa/carebears_project/blob/1fdc51d9311ebc2bfd9c442eceffb5d5899fab4c/wireframes_and_ERD/Care%20Bear%20DB%20original%20wireframes.pdf)
 
 
 ### ERD
 ____
-The final ERD of the project: [_ERD_](wireframes_and_ERD/Care Bears DB ERD.png)
+The final ERD of the project: [_ERD_](https://github.com/Eucaa/carebears_project/blob/1fdc51d9311ebc2bfd9c442eceffb5d5899fab4c/wireframes_and_ERD/Care%20Bears%20DB%20ERD.png)
 
 
 ## Features
