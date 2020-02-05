@@ -78,10 +78,10 @@ body {
 /*--- Unique classes ---*/
 
 /*--- home view ---*/
+
 .icon_styling {
     height: 100px;
 }
-
 
 /*--- about view ---*/
 
@@ -89,7 +89,6 @@ body {
     padding: 0;
     height: 100%;
 }
-
 
 .row_position {
     margin: 0;
@@ -268,6 +267,8 @@ body {
     padding: 3px;
 }
 
+/*--- adjustments for other device sizes ---*/
+
 @media screen and (max-width: 1023px) {
     body {
         background-color: #e0efff;
@@ -353,6 +354,7 @@ body {
     }
 }
 
+
 @media screen and (min-width: 1280px) {
     .signUp_image_position {
         height: 100vh;
@@ -360,6 +362,7 @@ body {
     }
 
 }
+
 
 @media screen and (min-width: 767px) {
     .select-btn-resize {
